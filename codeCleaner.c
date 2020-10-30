@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <signal.h>
 #include "log.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
 
 void sig_handler(int sig){
 	//printf("\nCaught SIGINT-signal.\nExiting program...\n");
@@ -19,30 +22,31 @@ void sig_term_hand(int sig){
 }
 
 
-int cleanCode(char* filNam){
+int cleanCode(char* filNam, int fpLog){
 	signal(SIGINT, sig_handler);
 	signal(SIGTERM, sig_term_hand);
+	
+
 	FILE *fp, *fp2;
 	fp = fopen(filNam, "r"); //opens the given file and checks it has gone without failures.
+	char str[400];
 	if(fp == NULL){
 		printf("Failed to open given file: %s \n", filNam);
-		writeLog("Failed to open given file:", filNam);
+		sprintf(str, "failed to open given file: %s\n", filNam);
+		writeToLog(fpLog, str);
 		return -1;	
 	
 	}
 	
-	//char* destFil = malloc(strlen(filNam)*sizeof(char));
-	//strcat(destFil, filNam);
-	//destFil = realloc(destFil, strlen(destFil)*sizeof(char)+ strlen(".clean"));
-	//strcat(destFil, ".clean");	
 	size_t length = strlen(filNam) + strlen(".clean") +1;
 	char *destFil = (char*) malloc(sizeof(char)*length);
 	snprintf(destFil, length, "%s%s", filNam, ".clean");
 	fp2 = fopen(destFil, "w");
 	free(destFil);
 	if(fp2==NULL){
-		printf("Failed to create file for cleaned code\n");
-		writeLog("Failed to create file for cleaned code to file:", filNam);
+		
+		sprintf(str, "Failed to create file for cleaned code\n");
+		writeToLog(fpLog, str);
 		return -1;
 	}
 	int c; // when reading file the basic char, pointer location on file
@@ -98,7 +102,6 @@ int cleanCode(char* filNam){
 				comline =0;
 				if(atEnd == 1){
 					fputc('\n', fp2);
-//					printf("\n");
 				}
 				atEnd =0;
 			}else if(c == '*'){
@@ -107,18 +110,14 @@ int cleanCode(char* filNam){
 					multicom =0;
 					if(atEnd == 1){
 					fputc('\n', fp2);
-//					printf("\n");
 					}
 					atEnd= 0;
 				}
 			}
 		}else{
 			fputc(c, fp2);
-//			printf("%c", c);
-
 		}
 	}
-	
 	fclose(fp);
 	fclose(fp2);
 	return 0;
