@@ -2,10 +2,11 @@ CC = gcc
 CFLAGS = -Wall -pedantic -g  
 
 
-
-cleanCode: main.o codeCleaner.o log.o 
+cleanCode: main.o codeCleaner.o log.o  
 	$(CC) -o cleanCode $(CFLAGS) main.o codeCleaner.o log.o
 
+exec:  CleanCode.c codeCleaner.o log.o
+	$(CC)  -o cleaner $(CFLAGS) cleanCode.c codeCleaner.o log.o
 
 
 main.o: main.c codeCleaner.o log.o

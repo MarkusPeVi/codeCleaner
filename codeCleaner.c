@@ -8,15 +8,13 @@
 #include <errno.h>
 
 void sig_handler(int sig){
-	//printf("\nCaught SIGINT-signal.\nExiting program...\n");
 	// write to log-file
 	printf("SIGINT caught at codeCleaner\n");
-	//	writeLog("Caught SIGINT-signal,", "exiting program...");
 	exit(0);// closes files and frees used memory 	
 
 }
 void sig_term_hand(int sig){
-	printf("Caught SIGTERM-signal\n");
+	printf("Caught SIGTERM-signal at codeCleane\n");
 	exit(0);
 
 }
@@ -118,6 +116,7 @@ int cleanCode(char* filNam, int fpLog){
 			fputc(c, fp2);
 		}
 	}
+	sleep(10);
 	fclose(fp);
 	fclose(fp2);
 	return 0;

@@ -16,7 +16,7 @@ void sign_handler(int sig){
 	switch(sig){
 		case SIGINT :{ 
 			printf("\nCaught a SIGINT-signal.\n Closing program...\n");
-			writeToLog(log,"Caught a SIGINT-signal.\nnClosing program...\n");
+			writeToLog(log,"Caught a SIGINT-signal.\nClosing program...\n");
 			kill(0, SIGTERM);
 			pid_t wPid;
 			while((wPid = waitpid(-1, 0, WNOHANG)) != -1){
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]){
 	for(int i = 1; i < argc; i++){
 		pid_t pid = fork();
 		if(pid == 0){
-			char str[400];
+/*			char str[400];
 			sprintf(str,"Starting to clean code from file %s\n", argv[i]);
 			writeToLog(log, str);	 			
 			char logStr[400];
@@ -62,6 +62,8 @@ int main(int argc, char* argv[]){
 				sprintf(logStr, "Succesfully cleaned comments from file %s\n", argv[i]);
 				writeToLog(log, logStr);
 			}		
+*/
+			execl("./cleaner", ".",argv[i], NULL );
 			exit(0);
 		}	
 	}
