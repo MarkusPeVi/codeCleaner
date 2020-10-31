@@ -32,7 +32,7 @@ void sign_handler(int sig){
 int main(int argc, char* argv[]){
 	signal(SIGINT, sign_handler);
 	remove("cleanComments.log");
-	log = open("cleanComments.log", O_RDWR | O_APPEND | O_CREAT| O_NONBLOCK);
+	log = open("cleanComments.log", O_RDWR | O_APPEND | O_CREAT| O_NONBLOCK, 0777);
 	if(log < 0){
 		perror("open");
 		return -1;
@@ -69,5 +69,6 @@ int main(int argc, char* argv[]){
 	}
 	// Check that all children have returned
 	while(waitpid(-1, 0, WNOHANG) != -1){}
+	close(log);
 	return 0; 
 }

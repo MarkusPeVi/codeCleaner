@@ -14,7 +14,7 @@ void sig_handler(int sig){
 
 }
 void sig_term_hand(int sig){
-	printf("Caught SIGTERM-signal at codeCleane\n");
+	printf("Caught SIGTERM-signal\n");
 	exit(0);
 
 }
@@ -116,7 +116,6 @@ int cleanCode(char* filNam, int fpLog){
 			fputc(c, fp2);
 		}
 	}
-	sleep(10);
 	fclose(fp);
 	fclose(fp2);
 	return 0;
