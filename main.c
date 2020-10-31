@@ -11,18 +11,22 @@
 
 #include "codeCleaner.h"
 #include "log.h"
+
 static int log;
 void sign_handler(int sig){
 	switch(sig){
 		case SIGINT :{ 
+			//signal handler for SIGINT signals
 			printf("\nCaught a SIGINT-signal.\n Closing program...\n");
 			writeToLog(log,"Caught a SIGINT-signal.\nClosing program...\n");
+			// Sends SIGTERM-signal so all processes are closed properly
 			kill(0, SIGTERM);
 			pid_t wPid;
 			while((wPid = waitpid(-1, 0, WNOHANG)) != -1){
 				if(wPid > 0){
 				}
 			}
+			// Closes everything involved in this process gracefully
 			exit(0);
 			     }
 	}
@@ -31,18 +35,19 @@ void sign_handler(int sig){
 
 int main(int argc, char* argv[]){
 	signal(SIGINT, sign_handler);
+	//defines SIGINT -signal handler
 	remove("cleanComments.log");
+	//Opens file with right to be accessed by multiple users with rights to read, write, append and create file etc
 	log = open("cleanComments.log", O_RDWR | O_APPEND | O_CREAT| O_NONBLOCK, 0777);
 	if(log < 0){
 		perror("open");
 		return -1;
 	}
 	writeToLog(log, "Starting to clean code(s)\n");	
-		
+	//calls writeLog function	
 	if(argc < 2){
 		printf("To use this program you have to give atleast one file to clean, as an argument.\n");
 		printf("For example:\n%s nameOfTheCodeToBeCleaned.c\n", argv[0]);
-		
 		writeToLog(log, "Stopping program because of too few arguments"); 	
 		return -1;
 	}
@@ -50,19 +55,7 @@ int main(int argc, char* argv[]){
 	for(int i = 1; i < argc; i++){
 		pid_t pid = fork();
 		if(pid == 0){
-/*			char str[400];
-			sprintf(str,"Starting to clean code from file %s\n", argv[i]);
-			writeToLog(log, str);	 			
-			char logStr[400];
-			if(0 != cleanCode(argv[i], log)){
-				printf("Failed to clean file %s\n", argv[i]);
-				sprintf(logStr, "Failed to clean file %s\n", argv[i]);
-				writeToLog(log, logStr);
-			}else{
-				sprintf(logStr, "Succesfully cleaned comments from file %s\n", argv[i]);
-				writeToLog(log, logStr);
-			}		
-*/
+			// exec command that calls ./cleaner binary which handles cleaning a codefile.
 			execl("./cleaner", ".",argv[i], NULL );
 			exit(0);
 		}	

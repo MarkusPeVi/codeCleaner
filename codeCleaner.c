@@ -39,8 +39,11 @@ int cleanCode(char* filNam, int fpLog){
 	size_t length = strlen(filNam) + strlen(".clean") +1;
 	char *destFil = (char*) malloc(sizeof(char)*length);
 	snprintf(destFil, length, "%s%s", filNam, ".clean");
-	fp2 = fopen(destFil, "w");
-	free(destFil);
+	char *tmpDest = (char*) malloc(sizeof(char)*(length+3));
+	snprintf(tmpDest, length+ 3, "%s%s", destFil, "tmp");
+	
+	fp2 = fopen(tmpDest, "w");
+//	free(destFil);
 	if(fp2==NULL){
 		
 		sprintf(str, "Failed to create file for cleaned code\n");
@@ -118,13 +121,27 @@ int cleanCode(char* filNam, int fpLog){
 	}
 	fclose(fp);
 	fclose(fp2);
+	fp = fopen(destFil, "w");
+	fp2 = fopen(tmpDest, "r");
+	char line[500];
+	int emptyLine = 0;
+	while(fgets(line, 500, fp2) != NULL){
+		emptyLine =0;
+		for(int i =0; i < strlen(line); i++){
+			if(line[i] != '\n' && line[i] != '\t')emptyLine++;
+
+		}
+		if(emptyLine > 0){
+			fputs(line,  fp);
+
+		}
+	}
+	remove(	tmpDest);
+	fclose(fp);
+	fclose(fp2);
+	free(destFil);
+	free(tmpDest);
+
 	return 0;
 }
 
-
-/*
-int main(int argc, char* argv[]){
-	cleanCode("testCode.c");
-	return 0;
-}
-*/
