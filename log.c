@@ -78,7 +78,7 @@ int writeToLog(int fp, char* str){
 	sprintf(logInf+strlen(logInf),"%s", str);
 	int w;
 	while( (w = write(fp, logInf, strlen(logInf))) == -1){
-		if(w != EWOULDBLOCK &  w !=  EAGAIN){
+		if((w != EWOULDBLOCK) & ( w !=  EAGAIN)){
 			break;
 		}	
 	}
