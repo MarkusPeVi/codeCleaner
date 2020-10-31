@@ -5,7 +5,7 @@ CFLAGS = -Wall -pedantic
 cleanCode: main.o codeCleaner.o log.o  
 	$(CC) -o cleanCode $(CFLAGS) main.o codeCleaner.o log.o
 	make exec
-exec:  CleanCode.c codeCleaner.o log.o
+exec:  cleanCode.c codeCleaner.o log.o
 	$(CC)  -o cleaner $(CFLAGS) cleanCode.c codeCleaner.o log.o
 	
 
