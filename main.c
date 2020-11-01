@@ -14,22 +14,22 @@
 
 static int log;
 void sign_handler(int sig){
-	switch(sig){
-		case SIGINT :{ 
-			//signal handler for SIGINT signals
-			printf("\nCaught a SIGINT-signal.\n Closing program...\n");
-			writeToLog(log,"Caught a SIGINT-signal.\nClosing program...\n");
-			// Sends SIGTERM-signal so all processes are closed properly
-			kill(0, SIGTERM);
-			pid_t wPid;
-			while((wPid = waitpid(-1, 0, WNOHANG)) != -1){
-				if(wPid > 0){
-				}
-			}
-			// Closes everything involved in this process gracefully
-			exit(0);
-			     }
+	//signal handler for SIGINT signals
+	printf("\nCaught a SIGINT-signal.\n Closing program...\n");
+	char exitEntry[500];
+	sprintf(exitEntry," PID:%d :Caught a SIGINT-signal.Closing program...\n", getpid()); 
+	writeToLog(log, exitEntry);
+	// Sends SIGTERM-signal so all processes are closed properly
+	kill(0, SIGTERM);
+	pid_t wPid;
+	while((wPid = waitpid(-1, 0, WNOHANG)) != -1){
+		if(wPid > 0){
+		
+		}
+
 	}
+	// Closes everything involved in this process gracefully
+	exit(0);
 
 }
 

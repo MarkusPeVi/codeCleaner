@@ -19,7 +19,6 @@ void sig_term_hand(int sig){
 
 }
 
-
 int cleanCode(char* filNam, int fpLog){
 	signal(SIGINT, sig_handler);
 	signal(SIGTERM, sig_term_hand);
@@ -121,11 +120,14 @@ int cleanCode(char* filNam, int fpLog){
 	}
 	fclose(fp);
 	fclose(fp2);
+	
+	// Opens the tmp file where the code that still has unnecessary empty lines and 
+	// the final file where cleaned code is written
 	fp = fopen(destFil, "w");
 	fp2 = fopen(tmpDest, "r");
 	char line[500];
 	int emptyLine = 0;
-	while(fgets(line, 500, fp2) != NULL){
+	while(fgets(line, 500, fp2) != NULL){ //loops through tmp file and checks if there are any empty lines
 		emptyLine =0;
 		for(int i =0; i < strlen(line); i++){
 			if(line[i] != '\n' && line[i] != '\t')emptyLine++;
@@ -136,9 +138,11 @@ int cleanCode(char* filNam, int fpLog){
 
 		}
 	}
-	remove(	tmpDest);
+	// Closes files, removes the tmp file 
+	// and free's used memory
 	fclose(fp);
 	fclose(fp2);
+	remove(	tmpDest);
 	free(destFil);
 	free(tmpDest);
 

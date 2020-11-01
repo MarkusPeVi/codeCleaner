@@ -12,7 +12,17 @@
 #include "codeCleaner.h"
 #include "log.h"
 
+
 static int log;
+
+void sig_hand(int signal){
+	printf("Caught a SIGINT-signal.\nClosing program...\n");
+	char exitEntry[500];
+	sprintf(exitEntry," PID:%d :Caught a SIGINT-signal.Closing program...\n", getpid()); 
+	writeToLog(log, exitEntry);
+	exit(0);	
+
+}
 
 int main(int argc,char* argv[]){
 	log = open("cleanComments.log", O_RDWR | O_APPEND | O_CREAT| O_NONBLOCK, 0777);
