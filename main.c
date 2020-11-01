@@ -24,7 +24,8 @@ void sign_handler(int sig){
 	pid_t wPid;
 	while((wPid = waitpid(-1, 0, WNOHANG)) != -1){
 		if(wPid > 0){
-		
+			//kills notresponding child processes
+			kill(wPid, SIGKILL);	
 		}
 
 	}
